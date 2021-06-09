@@ -2,8 +2,8 @@ version: '3'
 
 services:
   php:
-    #image: bottomoita/checkin-php:v1.1
-    build: ./docker/php
+    image: bottomoita/app_runner:v1.0
+    #build: ./docker/php
     container_name: laravel_app_runner
     volumes:
       - ./server:/var/www/html

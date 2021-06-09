@@ -28,14 +28,36 @@ RUN cd '/' \
 
 RUN chown -R apache:apache /var/www
 
+WORKDIR /var/www/
+#COPY composer.json .
+#COPY composer.lock .
+#COPY package.json .
+#COPY package-lock.json .
+
+RUN chown -R apache:apache /var/www
+#RUN chmod 777 -R /var/www/html
+RUN composer create-project --prefer-dist laravel/laravel sample "8.*"
+
+RUN mv /var/www/sample/* /var/www/html/
+RUN mv /var/www/sample/.editorconfig /var/www/html/
+RUN mv /var/www/sample/.env /var/www/html/
+RUN mv /var/www/sample/.env.example /var/www/html/
+RUN mv /var/www/sample/.gitattributes /var/www/html/
+RUN mv /var/www/sample/.gitignore /var/www/html/
+RUN mv /var/www/sample/.styleci.yml /var/www/html/
+
+RUN rm -rf /var/www/sample/
+
 WORKDIR /var/www/html
-COPY composer.json .
-COPY composer.lock .
-COPY package.json .
-COPY package-lock.json .
+RUN chown -R apache:apache /var/www/html
+RUN chmod -R 777 storage
+RUN chmod -R 777 bootstrap/cache
 COPY env-example .env
-RUN composer install
-RUN npm install && npm run dev
+RUN touch database/database.sqlite
+RUN php artisan migrate
+
+#RUN composer install
+#RUN npm install && npm run dev
 
 CMD ["/usr/sbin/init"]
 CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
