@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  php:
+    #image: bottomoita/checkin-php:v1.1
+    build: ./docker/php
+    container_name: laravel_app_runner
+    volumes:
+      - ./server:/var/www/html
+      - ./docker/httpd/php.ini:/etc/php.ini
+      - ./docker/httpd/conf/httpd.conf:/etc/httpd/conf/httpd.conf
+      - ./docker/httpd/conf.d/000-default.conf:/etc/httpd/conf.d/000-default.conf
+      - ./docker/httpd/conf.d/default-ssl.conf:/etc/httpd/conf.d/default-ssl.conf
+      - ./docker/httpd/mkcert:/etc/httpd/mkcert
+    #privileged: true
+    ports:
+      - 3000:443
